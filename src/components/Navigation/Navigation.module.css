@@ -1,0 +1,4 @@
+.header { padding: 20px; background-color: #f8f9fa; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+.nav { display: flex; gap: 20px; }
+.link { text-decoration: none; font-size: 18px; font-weight: 600; color: #333; }
+.active { text-decoration: none; font-size: 18px; font-weight: 600; color: #ff4757; }
