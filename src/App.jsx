@@ -1,29 +1,42 @@
-import { lazy, Suspense } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Navigation from './components/Navigation/Navigation';
-import Loader from './components/Loader/Loader';
+import { HashRouter, Routes, Route, Link } from "react-router-dom";
+import { lazy, Suspense } from "react";
 
-const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
-const MoviesPage = lazy(() => import('./pages/MoviesPage/MoviesPage'));
-const MovieDetailsPage = lazy(() => import('./pages/MovieDetailsPage/MovieDetailsPage'));
-const Cast = lazy(() => import('./subcomponents/Cast/Cast'));
-const Reviews = lazy(() => import('./subcomponents/Reviews/Reviews'));
+// Використовуємо React.lazy для оптимізації та швидкого завантаження
+const HomePage = lazy(() => import("./pages/HomePage"));
+const MoviesPage = lazy(() => import("./pages/MoviesPage"));
+const MovieDetails = lazy(() => import("./pages/MovieDetails"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage")); // або простіший варіант, якщо такого немає
 
 export default function App() {
   return (
-    <div>
-      <Navigation />
-      <Suspense fallback={<Loader />}>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/movies" element={<MoviesPage />} />
-          <Route path="/movies/:movieId" element={<MovieDetailsPage />}>
-            <Route path="cast" element={<Cast />} />
-            <Route path="reviews" element={<Reviews />} />
-          </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Suspense>
-    </div>
+    <HashRouter>
+      <div className="app-container">
+        {/* Навігаційна панель */}
+        <header className="header">
+          <nav className="nav">
+            <Link to="/" className="nav-link">
+              Home
+            </Link>
+            <Link to="/movies" className="nav-link">
+              Movies
+            </Link>
+          </nav>
+        </header>
+
+        {/* Відображення сторінок з лоадером під час завантаження */}
+        <main className="main-content">
+          <Suspense
+            fallback={<div className="loading">Завантаження сторінки...</div>}
+          >
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/movies" element={<MoviesPage />} />
+              <Route path="/movies/:movieId/*" element={<MovieDetails />} />
+              <Route path="*" element={<HomePage />} />
+            </Routes>
+          </Suspense>
+        </main>
+      </div>
+    </HashRouter>
   );
 }
