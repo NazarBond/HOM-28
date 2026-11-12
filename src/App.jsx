@@ -1,10 +1,10 @@
 import { HashRouter, Routes, Route, Link } from "react-router-dom";
-import { lazy, Suspense } from "react";
 
-const HomePage = lazy(() => import("./pages/HomePage"));
-const MoviesPage = lazy(() => import("./pages/MoviesPage"));
-const MovieDetails = lazy(() => import("./pages/MovieDetails"));
-const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
+// Прямі імпорти твоїх компонентів (переконайся, що вони лежать у src/components/)
+import HomePage from "./components/HomePage";
+import MoviesPage from "./components/MoviesPage";
+import MovieDetails from "./components/MovieDetails";
+import NotFoundPage from "./components/NotFoundPage";
 
 export default function App() {
   return (
@@ -22,16 +22,12 @@ export default function App() {
         </header>
 
         <main className="main-content">
-          <Suspense
-            fallback={<div className="loading-spinner">Завантаження...</div>}
-          >
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/movies" element={<MoviesPage />} />
-              <Route path="/movies/:movieId/*" element={<MovieDetails />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </Suspense>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/movies" element={<MoviesPage />} />
+            <Route path="/movies/:movieId/*" element={<MovieDetails />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
         </main>
       </div>
     </HashRouter>
