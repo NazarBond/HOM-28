@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-const API_KEY = "ТВОЙ_API_KEY"; // Заміни на свій реальний ключ TMDB
+const API_KEY = "f46c1d0ce2a6997d57e3d839898c078e";
 const BASE_URL = "https://api.themoviedb.org/3";
 
 export default function Reviews() {
@@ -25,6 +25,7 @@ export default function Reviews() {
         );
         setReviews(response.data.results);
       } catch (err) {
+        console.error("Reviews fetch error:", err);
         setError("Не вдалося завантажити відгуки.");
       } finally {
         setLoading(false);
@@ -36,14 +37,14 @@ export default function Reviews() {
 
   if (loading) return <p>Завантаження відгуків...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
-  if (reviews.length === 0)
+  if (!reviews || reviews.length === 0)
     return <p>We don't have any reviews for this movie yet.</p>;
 
   return (
     <div>
       <h3>Reviews</h3>
       <ul style={{ listStyle: "none", padding: 0 }}>
-        {reviews.reverse().map((review) => (
+        {reviews.map((review) => (
           <li
             key={review.id}
             style={{
@@ -52,8 +53,10 @@ export default function Reviews() {
               paddingBottom: "15px",
             }}
           >
-            <h4 style={{ margin: "0 0 5px" }}>Author: {review.author}</h4>
-            <p style={{ fontSize: "14px", lineHeight: "1.5" }}>
+            <h4 style={{ margin: "0 0 5px", color: "#333" }}>
+              Author: {review.author}
+            </h4>
+            <p style={{ fontSize: "14px", lineHeight: "1.5", color: "#555" }}>
               {review.content}
             </p>
           </li>

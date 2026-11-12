@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-const API_KEY = "ТВОЙ_API_KEY"; // Заміни на свій реальний ключ TMDB
+const API_KEY = "f46c1d0ce2a6997d57e3d839898c078e";
 const BASE_URL = "https://api.themoviedb.org/3";
 
 export default function Cast() {
@@ -25,6 +25,7 @@ export default function Cast() {
         );
         setCast(response.data.cast);
       } catch (err) {
+        console.error("Cast fetch error:", err);
         setError("Не вдалося завантажити інформацію про акторів.");
       } finally {
         setLoading(false);
@@ -36,7 +37,8 @@ export default function Cast() {
 
   if (loading) return <p>Завантаження акторів...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
-  if (cast.length === 0) return <p>Інформація про акторів відсутня.</p>;
+  if (!cast || cast.length === 0)
+    return <p>Інформація про акторів відсутня.</p>;
 
   return (
     <div>
@@ -80,6 +82,7 @@ export default function Cast() {
                   fontWeight: "bold",
                   fontSize: "14px",
                   margin: "8px 0 4px",
+                  color: "#333",
                 }}
               >
                 {actor.name}
