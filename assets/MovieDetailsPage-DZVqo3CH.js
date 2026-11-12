@@ -1,1 +1,0 @@
-import{n as e}from"./index-CQqxO77J.js";var t=e();function n(){return(0,t.jsx)(`div`,{children:`Movie Details Page`})}export{n as default};
