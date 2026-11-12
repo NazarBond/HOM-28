@@ -1,32 +1,26 @@
 import { HashRouter, Routes, Route, Link } from "react-router-dom";
 
-// Прямі імпорти твоїх компонентів (переконайся, що вони лежать у src/components/)
-import HomePage from "./components/HomePage";
-import MoviesPage from "./components/MoviesPage";
-import MovieDetails from "./components/MovieDetails";
-import NotFoundPage from "./components/NotFoundPage";
+// Імпорти згідно з твоєю структурою папок
+import HomePage from "./pages/HomePage/HomePage";
+import MoviesPage from "./pages/MoviesPage/MoviesPage";
+import MovieDetailsPage from "./pages/MovieDetailsPage/MovieDetailsPage";
+// Якщо у тебе є окремий файл NotFoundPage, імпортуй його, або використай HomePage як запасний варіант
+import Navigation from "./components/Navigation/Navigation";
 
 export default function App() {
   return (
     <HashRouter>
       <div className="app-container">
-        <header className="header">
-          <nav className="nav-menu">
-            <Link to="/" className="nav-link">
-              Home
-            </Link>
-            <Link to="/movies" className="nav-link">
-              Movies
-            </Link>
-          </nav>
-        </header>
+        {/* Навігація */}
+        <Navigation />
 
+        {/* Маршрутизація */}
         <main className="main-content">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/movies" element={<MoviesPage />} />
-            <Route path="/movies/:movieId/*" element={<MovieDetails />} />
-            <Route path="*" element={<NotFoundPage />} />
+            <Route path="/movies/:movieId/*" element={<MovieDetailsPage />} />
+            <Route path="*" element={<HomePage />} />
           </Routes>
         </main>
       </div>
