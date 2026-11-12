@@ -1,21 +1,16 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import {
   useParams,
+  Link,
   useNavigate,
   useLocation,
   Routes,
   Route,
-  Link,
-  Outlet,
 } from "react-router-dom";
 import axios from "axios";
 
-// Приклад підключення підкомпонентів (Cast та Reviews), якщо вони у тебе є в окремих файлах
-// Увага: переконайся, що шляхи до цих компонентів відповідають твоїй структурі папок!
-import MovieCast from "../components/MovieCast/MovieCast";
-import MovieReviews from "../components/MovieReviews/MovieReviews";
-
-const API_KEY = "ТУТ_ТВІЙ_КЛЮЧ_АБО_ТВОЄ_API"; // або імпорт твого сервісу
+// Твій базовий ключ та URL (заміни на свої або імпортуй зі свого файлу сервісу)
+const API_KEY = "f46c1d0ce2a6997d57e3d839898c078e";
 const BASE_URL = "https://api.themoviedb.org/3";
 
 export default function MovieDetails() {
@@ -23,8 +18,8 @@ export default function MovieDetails() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Зберігаємо шлях, з якого прийшов користувач, щоб повернутися назад
-  const backLinkHref = useRef(location.state?.from || "/movies");
+  // Зберігаємо шлях для кнопки "Назад"
+  const backLinkHref = location.state?.from ?? "/movies";
 
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -33,111 +28,86 @@ export default function MovieDetails() {
   useEffect(() => {
     if (!movieId) return;
 
-    const fetchMovieDetails = async () => {
+    const fetchMovie = async () => {
       try {
         setLoading(true);
-        // Запит до TMDB API (заміни на свій axios/fetch сервіс, якщо використовуєш його)
+        // Робимо запит за конкретним ID фільму
         const response = await axios.get(`${BASE_URL}/movie/${movieId}`, {
           params: {
-            api_key: "ТВОЙ_API_KEY_TMDB", // Встав свій ключ або використовуй імпортований сервіс
+            api_key: API_KEY,
             language: "en-US",
           },
         });
         setMovie(response.data);
       } catch (err) {
-        setError("Не вдалося завантажити інформацію про фільм.");
+        setError("Не вдалося завантажити дані фільму");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMovieDetails();
+    fetchMovie();
   }, [movieId]);
 
-  if (loading)
-    return <div className="loader">Завантаження деталей фільму...</div>;
-  if (error) return <div className="error">{error}</div>;
+  if (loading) return <p>Завантаження...</p>;
+  if (error) return <p>{error}</p>;
   if (!movie) return null;
 
-  // Формування постеру
-  const posterUrl = movie.poster_path
-    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-    : "https://via.placeholder.com/300x450?text=No+Image";
-
-  const userScore = movie.vote_average
-    ? Math.round(movie.vote_average * 10)
-    : 0;
-  const releaseYear = movie.release_date
-    ? movie.release_date.split("-")[0]
-    : "";
-  const genres = movie.genres ? movie.genres.map((g) => g.name).join(", ") : "";
-
   return (
-    <div className="movie-details-container">
-      {/* Кнопка повернення назад */}
+    <div style={{ padding: "20px" }}>
+      {/* Кнопка повернення */}
       <button
-        className="back-btn"
-        onClick={() => navigate(backLinkHref.current)}
+        onClick={() => navigate(backLinkHref)}
+        style={{ marginBottom: "20px" }}
       >
         &#8592; Go back
       </button>
 
-      {/* Основна інформація про фільм */}
-      <div
-        className="movie-info-card"
-        style={{ display: "flex", gap: "20px", marginTop: "20px" }}
-      >
+      {/* Головна інформація про фільм */}
+      <div style={{ display: "flex", gap: "20px" }}>
         <img
-          src={posterUrl}
-          alt={movie.title || movie.name}
-          width="300"
-          style={{ borderRadius: "8px" }}
+          src={
+            movie.poster_path
+              ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+              : "https://via.placeholder.com/300x450?text=No+Image"
+          }
+          alt={movie.title}
+          width="250"
         />
         <div>
           <h1>
-            {movie.title || movie.name} {releaseYear && `(${releaseYear})`}
+            {movie.title} ({movie.release_date?.slice(0, 4)})
           </h1>
-          <p>User Score: {userScore}%</p>
-
-          <h2>Owerview</h2>
+          <p>User Score: {Math.round(movie.vote_average * 10)}%</p>
+          <h3>Overview</h3>
           <p>{movie.overview}</p>
-
-          <h2>Genres</h2>
-          <p>{genres}</p>
+          <h3>Genres</h3>
+          <p>{movie.genres?.map((g) => g.name).join(", ")}</p>
         </div>
       </div>
 
-      {/* Додаткова інформація (Cast / Reviews) */}
-      <div className="additional-info" style={{ marginTop: "30px" }}>
+      {/* Посилання на додаткову інформацію */}
+      <div style={{ marginTop: "30px" }}>
         <h3>Additional information</h3>
-        <ul
-          style={{
-            display: "flex",
-            gap: "15px",
-            listStyle: "none",
-            padding: 0,
-          }}
-        >
+        <ul>
           <li>
-            <Link to="cast" state={{ from: backLinkHref.current }}>
+            <Link to="cast" state={{ from: backLinkHref }}>
               Cast
             </Link>
           </li>
           <li>
-            <Link to="reviews" state={{ from: backLinkHref.current }}>
+            <Link to="reviews" state={{ from: backLinkHref }}>
               Reviews
             </Link>
           </li>
         </ul>
       </div>
 
-      {/* Відображення підмаршрутів (Cast або Reviews) */}
-      <div className="nested-route-content" style={{ marginTop: "20px" }}>
-        <Routes>
-          <Route path="cast" element={<MovieCast />} />
-          <Route path="reviews" element={<MovieReviews />} />
-        </Routes>
-      </div>
+      {/* Місце для виведення вкладених маршрутів (Cast / Reviews) */}
+      <Routes>
+        <Route path="cast" element={<div>Тут буде компонент Cast</div>} />
+        <Route path="reviews" element={<div>Тут буде компонент Reviews</div>} />
+      </Routes>
     </div>
   );
 }
