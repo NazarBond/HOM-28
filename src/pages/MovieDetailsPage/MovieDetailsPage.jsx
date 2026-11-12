@@ -9,11 +9,10 @@ import {
 } from "react-router-dom";
 import axios from "axios";
 
-// Імпортуй підкомпоненти (переконайся, що вони існують у твоїй папці subcomponents)
 import Cast from "../../subcomponents/Cast/Cast";
 import Reviews from "../../subcomponents/Reviews/Reviews";
 
-const API_KEY = "f46c1d0ce2a6997d57e3d839898c078e"; // або твій ключ / імпорт із services/api.js
+const API_KEY = "f46c1d0ce2a6997d57e3d839898c078e"; // Заміни на свій реальний ключ TMDB або шлях до сервісу
 const BASE_URL = "https://api.themoviedb.org/3";
 
 export default function MovieDetailsPage() {
@@ -21,7 +20,7 @@ export default function MovieDetailsPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Зберігаємо попередній шлях (щоб кнопка "Go back" повертала туди, звідки прийшли)
+  // Безпечне збереження попереднього шляху
   const backLinkRef = useRef(location.state?.from ?? "/movies");
 
   const [movie, setMovie] = useState(null);
@@ -34,7 +33,8 @@ export default function MovieDetailsPage() {
     const fetchMovieDetails = async () => {
       try {
         setLoading(true);
-        // Запит деталей фільму за ID (або використай свою функцію з api.js)
+        setError(null);
+
         const response = await axios.get(`${BASE_URL}/movie/${movieId}`, {
           params: {
             api_key: API_KEY,
@@ -60,7 +60,6 @@ export default function MovieDetailsPage() {
     return <div style={{ padding: "20px", color: "red" }}>{error}</div>;
   if (!movie) return null;
 
-  // Формування посилання на постер
   const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : "https://via.placeholder.com/300x450?text=No+Image";
@@ -75,7 +74,6 @@ export default function MovieDetailsPage() {
 
   return (
     <div style={{ padding: "20px" }}>
-      {/* Кнопка повернення назад */}
       <button
         onClick={() => navigate(backLinkRef.current)}
         style={{ marginBottom: "20px", padding: "8px 16px", cursor: "pointer" }}
@@ -83,7 +81,6 @@ export default function MovieDetailsPage() {
         &#8592; Go back
       </button>
 
-      {/* Інформація про фільм */}
       <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
         <img
           src={posterUrl}
@@ -107,7 +104,6 @@ export default function MovieDetailsPage() {
         </div>
       </div>
 
-      {/* Додаткова інформація (Посилання на Cast та Reviews) */}
       <div
         style={{
           marginTop: "30px",
@@ -137,7 +133,6 @@ export default function MovieDetailsPage() {
         </ul>
       </div>
 
-      {/* Вкладені маршрути */}
       <div style={{ marginTop: "20px" }}>
         <Routes>
           <Route path="cast" element={<Cast />} />
