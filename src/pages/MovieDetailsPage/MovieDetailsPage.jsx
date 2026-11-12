@@ -12,7 +12,7 @@ import axios from "axios";
 import Cast from "../../subcomponents/Cast/Cast";
 import Reviews from "../../subcomponents/Reviews/Reviews";
 
-const API_KEY = "f46c1d0ce2a6997d57e3d839898c078e"; // Заміни на свій реальний ключ TMDB або шлях до сервісу
+const API_KEY = "f46c1d0ce2a6997d57e3d839898c078e"; // Заміни на свій ключ TMDB
 const BASE_URL = "https://api.themoviedb.org/3";
 
 export default function MovieDetailsPage() {
@@ -20,7 +20,6 @@ export default function MovieDetailsPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Безпечне збереження попереднього шляху
   const backLinkRef = useRef(location.state?.from ?? "/movies");
 
   const [movie, setMovie] = useState(null);

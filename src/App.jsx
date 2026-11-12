@@ -8,15 +8,12 @@ import Navigation from "./components/Navigation/Navigation";
 export default function App() {
   return (
     <div className="app-container">
-      {/* Навігація */}
       <Navigation />
 
-      {/* Маршрутизація */}
       <main className="main-content">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/movies" element={<MoviesPage />} />
-          {/* Зірочка вкінці обов'язкова для вкладених роутів (Cast / Reviews) */}
           <Route path="/movies/:movieId/*" element={<MovieDetailsPage />} />
           <Route path="*" element={<HomePage />} />
         </Routes>
