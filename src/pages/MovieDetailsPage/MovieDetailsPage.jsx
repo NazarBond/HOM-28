@@ -13,7 +13,7 @@ import axios from "axios";
 import Cast from "../../subcomponents/Cast/Cast";
 import Reviews from "../../subcomponents/Reviews/Reviews";
 
-const API_KEY = "ТВОЙ_API_KEY"; // або твій ключ / імпорт із services/api.js
+const API_KEY = "f46c1d0ce2a6997d57e3d839898c078e"; // або твій ключ / імпорт із services/api.js
 const BASE_URL = "https://api.themoviedb.org/3";
 
 export default function MovieDetailsPage() {
